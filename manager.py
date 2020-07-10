@@ -13,6 +13,7 @@ manager = Manager(app)
 def worker():
     app.app_context().push()
     celery = init_celery(app)
+    return celery
 
 @manager.command
 def run():
