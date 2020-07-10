@@ -1,9 +1,8 @@
 from celery import Celery
-# from app.celery_config import config
 
 celery = Celery('tasks')
 
 
-def init_celery(config):
-    celery.config_from_object(config)
+def init_celery(app):
+    celery.config_from_object(app.config.CELERY_CONFIG)
     return celery
