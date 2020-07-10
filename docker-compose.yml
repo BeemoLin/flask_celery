@@ -24,7 +24,7 @@ services:
       - backend_redis
     depends_on:
       - redis
-    command: celery -A celery_worker.celery worker -l info
+    command: celery -A manager.worker worker -l info
     volumes:
       - ./:/app/
 
