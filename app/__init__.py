@@ -2,8 +2,6 @@ import os
 from flask import Flask
 import import_string
 from app.config import app_config
-from app.celery_config import celery_config
-
 blueprints = [
     ("app.routes.root:bp", "/"),
     ("app.routes.admin:bp", "/admin"),
@@ -11,7 +9,7 @@ blueprints = [
 
 
 extensions = [
-    ('app.exts.celery:init_celery', celery_config)
+    'app.exts.celery:init_celery'
 ]
 
 
@@ -37,9 +35,9 @@ def create_app(config_name='development'):
     app.after_request(_access_control)
 
     # init extensions
-    for ext_name, cfg in extensions:
+    for ext_name in extensions:
         init_ext = import_string(ext_name)
-        init_ext(cfg)
+        init_ext(app)
 
     # register blue print
     for bp_name, prefix in blueprints:
