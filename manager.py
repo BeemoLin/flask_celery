@@ -11,9 +11,7 @@ manager = Manager(app)
 
 @manager.command
 def worker():
-
     app.app_context().push()
-
     celery = init_celery(app)
 
 @manager.command
