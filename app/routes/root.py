@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import os
+import json
+from flask import current_app
 from flask import Blueprint
 from flask import jsonify
-from app.tasks import hello, add, get_redis_host, queue_list
+from app.tasks import hello, add, queue_list, get_config
 
 bp = Blueprint('root', __name__)
 
@@ -26,14 +27,18 @@ def tasks():
 
 @bp.route('/config')
 def config():
-    return 'REDIS_HOST = {}'.format(os.environ.get("REDIS_HOST", ''))
+    cfg = current_app.config
+    cfg = json.dumps(cfg, indent=4, sort_keys=True, default=str)
+    cfg = json.loads(cfg)
+    return jsonify(cfg)
 
 
 @bp.route('/celery_config')
 def celery_config():
-    r = get_redis_host.delay()
+    r = get_config.delay()
     r.wait()
-    return 'celery:REDIS_HOST = {}'.format(r.result)
+    cfg = json.loads(r.result)
+    return jsonify(cfg)
 
 
 @bp.route('/add_task')

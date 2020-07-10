@@ -1,5 +1,6 @@
-import os
+import json
 from time import sleep
+from flask import current_app, jsonify
 from app.exts.celery import celery
 
 
@@ -7,8 +8,8 @@ def queue_list():
     # Inspect all nodes.
     i = celery.control.inspect()
     queue = i.reserved()
-    queue_list = list(value for key, value in queue.items())[0]
-    return queue_list
+    current_app.logger.info("workers = {}".format(list(queue.keys())))
+    return queue
 
 
 @celery.task(name='hello')
@@ -23,6 +24,7 @@ def add(a, b):
 
 
 @celery.task
-def get_redis_host():
-    print(os.environ.get("REDIS_HOST", ''))
-    return os.environ.get("REDIS_HOST", '')
+def get_config():
+    cfg = current_app.config
+    cfg = json.dumps(cfg, indent=4, sort_keys=True, default=str)
+    return str(cfg)

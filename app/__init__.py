@@ -1,4 +1,3 @@
-import os
 from flask import Flask
 import import_string
 from app.config import app_config
@@ -9,7 +8,8 @@ blueprints = [
 
 
 extensions = [
-    'app.exts.celery:init_celery'
+    # 改到 manager 因為 worker 也會用到
+    # 'app.exts.celery:init_celery'
 ]
 
 
@@ -27,6 +27,7 @@ def _access_control(response):
 def create_app(config_name='development'):
 
     app = Flask(__name__)
+
     # 添加配置
     config = app_config[config_name]
     app.config.from_object(config)

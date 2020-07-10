@@ -17,14 +17,14 @@ services:
   worker:
     container_name: worker
     restart: always
-    build: ./app
+    build: .
     environment:
       - REDIS_HOST=redis
     networks:
       - backend_redis
     depends_on:
       - redis
-    command: celery -A manager.worker worker -l info
+    command: celery -A manager.celery worker -l info
     volumes:
       - ./:/app/
 
