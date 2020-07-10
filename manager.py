@@ -1,6 +1,7 @@
 from app import create_app
 from flask_script import Manager
 from gevent import monkey
+from app.exts.celery import init_celery
 
 # multi thread block problem
 monkey.patch_all()
@@ -8,6 +9,12 @@ monkey.patch_all()
 app = create_app()
 manager = Manager(app)
 
+@manager.command
+def worker():
+
+    app.app_context().push()
+
+    celery = init_celery(app)
 
 @manager.command
 def run():
