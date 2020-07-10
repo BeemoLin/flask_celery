@@ -4,5 +4,5 @@ celery = Celery('tasks')
 
 
 def init_celery(app):
-    celery.config_from_object(app.config.CELERY_CONFIG)
+    celery.config_from_object(app.config.get("CELERY_CONFIG", None))
     return celery
