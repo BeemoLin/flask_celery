@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from werkzeug.utils import import_string
+import import_string
 from app.config import app_config
 from app.celery_config import celery_config
 
