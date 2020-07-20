@@ -19,8 +19,9 @@ def hello():
 
 @celery.task
 def add(a, b):
-    sleep(10)
+    sleep(5)
     print('{} + {} = {}'.format(a, b, (a + b)))
+    return a + b
 
 
 @celery.task

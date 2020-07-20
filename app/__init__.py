@@ -9,7 +9,7 @@ blueprints = [
 
 extensions = [
     # 改到 manager 因為 worker 也會用到
-    # 'app.exts.celery:init_celery'
+    'app.exts.celery:init_celery'
 ]
 
 

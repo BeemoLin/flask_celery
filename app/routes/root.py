@@ -49,3 +49,15 @@ def add_task():
         'task': '1 + 2 = ?'
     }
     return jsonify(response)
+
+
+@bp.route('/run_task')
+def run_task():
+    r = add.delay(1, 2)
+    r.wait()
+    print(r.result)
+    response = {
+        'task_id': r.task_id,
+        'task': '1 + 2 = {}'.format(r.result)
+    }
+    return jsonify(response)

@@ -14,19 +14,19 @@ services:
       - $PWD/redis-data:/var/lib/redis
       - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
 
-  worker:
-    container_name: worker
-    restart: always
-    build: .
-    environment:
-      - REDIS_HOST=redis
-    networks:
-      - backend_redis
-    depends_on:
-      - redis
-    command: celery -A manager.celery worker -l info
-    volumes:
-      - ./:/app/
+#  worker:
+#    container_name: worker
+#    restart: always
+#    build: .
+#    environment:
+#      - REDIS_HOST=redis
+#    networks:
+#      - backend_redis
+#    depends_on:
+#      - redis
+#    command: celery -A manager.celery worker -l info
+#    volumes:
+#      - ./:/app/
 
 networks:
   backend_redis:
