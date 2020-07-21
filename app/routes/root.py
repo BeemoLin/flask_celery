@@ -3,6 +3,7 @@ import json
 from flask import current_app
 from flask import Blueprint
 from flask import jsonify
+from flask import request
 from app.tasks import hello, add, queue_list, get_config
 
 bp = Blueprint('root', __name__)
@@ -43,11 +44,15 @@ def celery_config():
 
 @bp.route('/add_task')
 def add_task():
-    r = add.delay(1, 2)
-    response = {
-        'task_id': r.task_id,
-        'task': '1 + 2 = ?'
-    }
+    count = request.args.get('count', default=1, type=int)
+    print(count)
+    response = []
+    for i in range(count):
+        r = add.delay(1, 2)
+        response.append({
+            'task_id': r.task_id,
+            'task': '1 + 2 = ?'
+        })
     return jsonify(response)
 
 

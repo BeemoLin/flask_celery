@@ -8,7 +8,6 @@ def queue_list():
     # Inspect all nodes.
     i = celery.control.inspect()
     queue = i.reserved()
-    current_app.logger.info("workers = {}".format(list(queue.keys())))
     return queue
 
 

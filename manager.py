@@ -6,7 +6,7 @@ from celery import current_app
 from celery.bin import worker
 
 
-run_production = False
+run_production = True
 config_mode = 'production' if run_production else 'development'
 
 app = create_app(config_mode)
@@ -14,12 +14,24 @@ app = create_app(config_mode)
 manager = Manager(app)
 
 
-@manager.command
-def run():
-    # multi thread block problem
-    # monkey.patch_all()
+class CeleryWorkers:
+    proc = None
 
-    app.run(host='0.0.0.0', port=5000)
+    def __init__(self):
+        pass
+
+    def __enter__(self):
+        import subprocess
+
+        self.proc = subprocess.Popen(
+            ["python", "manager.py", "start_worker"],
+            shell=False,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("\nworker: Celery worker will shutdown after restore tasks \n")
+        # self.proc.kill()
 
 
 @manager.command
@@ -31,9 +43,21 @@ def start_worker():
         'broker': celery_config['broker_url'] if celery_config['broker_url'] is None else '0.0.0.0',
         'loglevel': celery_config['loglevel'] if celery_config['loglevel'] is None else 'INFO',
         'traceback': celery_config['traceback'] if celery_config['traceback'] is None else True,
+        'concurrency': celery_config['concurrency'] if celery_config['concurrency'] is None else 2,
     }
 
     celery_worker.run(**options)
+
+
+@manager.command
+def run():
+    # multi thread block problem
+    # monkey.patch_all()
+
+    print(cpu_count())
+
+    with CeleryWorkers():
+        app.run(host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
