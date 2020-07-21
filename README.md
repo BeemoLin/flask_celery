@@ -8,11 +8,11 @@ docker-compose up -d
 ```
 ### start `flask` with `celery worker`
 ```
-python manager run
+python manager.py run
 ```
 
 ## optional
 ### start `celery worker` only
 ```
-python manager start_worker
+python manager.py start_worker
 ```
