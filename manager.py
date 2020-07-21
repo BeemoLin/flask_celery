@@ -54,8 +54,6 @@ def run():
     # multi thread block problem
     # monkey.patch_all()
 
-    print(cpu_count())
-
     with CeleryWorkers():
         app.run(host='0.0.0.0', port=5000)
 
