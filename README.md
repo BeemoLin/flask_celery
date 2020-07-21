@@ -2,7 +2,7 @@
 
 ## launch
 
-###start `redis`
+### start `redis`
 ```
 docker-compose up -d
 ```
