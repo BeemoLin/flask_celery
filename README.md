@@ -1,6 +1,18 @@
 # flask_celery_blueprint
 
 ## launch
-- docker-compose up -d
-- python manager run
-- python manager start_worker
+
+###start `redis`
+```
+docker-compose up -d
+```
+### start `flask` with `celery worker`
+```
+python manager run
+```
+
+## optional
+### start `celery worker` only
+```
+python manager start_worker
+```
