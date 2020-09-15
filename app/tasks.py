@@ -8,6 +8,8 @@ def queue_list():
     # Inspect all nodes.
     i = celery.control.inspect()
     queue = i.reserved()
+    print(i.scheduled())
+    print(i.active())
     return queue
 
 
