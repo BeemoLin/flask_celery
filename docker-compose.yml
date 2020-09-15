@@ -2,17 +2,35 @@
 version: '3'
 
 services:
+  #rabbitmq container
+  rabbitmq:
+    #setup host name
+    hostname: myrabbitmq
+    #use docker images
+    image: rabbitmq:3-management
+    #ports setting
+    ports:
+      - 15672:15672
+      - 5672:5672
+    restart: always
+    #volumes setting
+    # volumes:
+      # - ./mq-data:/var/lib/rabbitmq
+
+
   redis:
     image: "redis:alpine"
     restart: always
-    command: redis-server
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - '6379:6379'
+    sysctls:
+      net.core.somaxconn: '65535'
     networks:
       - backend_redis
     volumes:
-      - $PWD/redis-data:/var/lib/redis
-      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis-data:/var/lib/redis
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
 
 #  worker:
 #    container_name: worker

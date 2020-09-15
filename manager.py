@@ -1,10 +1,11 @@
+import os
+
 from app import create_app
 from flask_script import Manager
 # from gevent import monkey
 
 from celery import current_app
 from celery.bin import worker
-
 
 run_production = True
 config_mode = 'production' if run_production else 'development'
@@ -18,7 +19,8 @@ class CeleryWorkers:
     proc = None
 
     def __init__(self):
-        pass
+        # for celery on windows bug
+        os.environ.setdefault('FORKED_BY_MULTIPROCESSING', '1')
 
     def __enter__(self):
         import subprocess
@@ -43,7 +45,7 @@ def start_worker():
         'broker': celery_config['broker_url'] if celery_config['broker_url'] is None else '0.0.0.0',
         'loglevel': celery_config['loglevel'] if celery_config['loglevel'] is None else 'INFO',
         'traceback': celery_config['traceback'] if celery_config['traceback'] is None else True,
-        'concurrency': celery_config['concurrency'] if celery_config['concurrency'] is None else 2,
+        'concurrency': celery_config['concurrency'] if celery_config['concurrency'] is None else 2
     }
 
     celery_worker.run(**options)
