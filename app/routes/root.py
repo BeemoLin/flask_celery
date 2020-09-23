@@ -45,7 +45,7 @@ def celery_config():
 @bp.route('/add_task')
 def add_task():
     count = request.args.get('count', default=1, type=int)
-    print(count)
+    log_dir = create_log_dir
     response = []
     for i in range(count):
         r = add.delay(1, 2)
