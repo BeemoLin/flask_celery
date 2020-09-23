@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+import json, csv
 from flask import current_app
 from flask import Blueprint
 from flask import jsonify
 from flask import request
 from app.tasks import hello, add, queue_list, get_config
+from app.models.yolov4.train import create_log_dir, get_train_log_path
 
 bp = Blueprint('root', __name__)
 
@@ -44,25 +45,27 @@ def celery_config():
 
 @bp.route('/add_task')
 def add_task():
-    count = request.args.get('count', default=1, type=int)
-    log_dir = create_log_dir
-    response = []
-    for i in range(count):
-        r = add.delay(1, 2)
-        response.append({
-            'task_id': r.task_id,
-            'task': '1 + 2 = ?'
-        })
-    return jsonify(response)
-
-
-@bp.route('/run_task')
-def run_task():
-    r = add.delay(1, 2)
-    r.wait()
-    print(r.result)
+    epoch = request.args.get('epoch', default=5, type=int)
+    log_dir = create_log_dir()
+    r = add.delay(log_dir, epoch)
     response = {
         'task_id': r.task_id,
-        'task': '1 + 2 = {}'.format(r.result)
+        'log_dir': log_dir,
+        'epoch': epoch
     }
     return jsonify(response)
+
+
+@bp.route('/read_log')
+def read_log():
+    log_path = request.args.get('log_path', default=None)
+    if log_path is None:
+        return "ERROR: log not exist"
+
+    train_log_path = get_train_log_path(log_path)
+
+    with open(train_log_path, mode="r") as files:
+        dict_reader = csv.DictReader(files)
+        csv_dict = json.dumps([row for row in dict_reader], indent=2)
+    
+    return csv_dict

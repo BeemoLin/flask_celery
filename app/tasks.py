@@ -2,7 +2,7 @@ import json
 from time import sleep
 from flask import current_app, jsonify
 from app.exts.celery import celery
-
+from app.models.yolov4.train import training, clear_gpu
 
 def queue_list():
     # Inspect all nodes.
@@ -19,10 +19,11 @@ def hello():
 
 
 @celery.task
-def add(a, b):
-    sleep(5)
-    print('{} + {} = {}'.format(a, b, (a + b)))
-    return a + b
+def add(log_dir, epoch):
+    # training model
+    training(log_dir, epoch)
+    clear_gpu()
+    return
 
 
 @celery.task
