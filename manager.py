@@ -45,7 +45,8 @@ def start_worker():
         'broker': celery_config['broker_url'] if celery_config['broker_url'] is None else '0.0.0.0',
         'loglevel': celery_config['loglevel'] if celery_config['loglevel'] is None else 'INFO',
         'traceback': celery_config['traceback'] if celery_config['traceback'] is None else True,
-        'concurrency': celery_config['concurrency'] if celery_config['concurrency'] is None else 2
+        'concurrency': celery_config['concurrency'] if celery_config['concurrency'] is None else 1,
+        'pool': celery_config['pool'] if celery_config['pool'] is None else 'solo',
     }
 
     celery_worker.run(**options)

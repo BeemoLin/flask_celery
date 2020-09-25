@@ -21,7 +21,8 @@ class Config:
         # worker config
         'loglevel': 'INFO',
         'traceback': True,
-        'concurrency': 2
+        'concurrency': 1,
+        'pool': 'solo', # prefork|eventlet|gevent|solo
     }
 
 

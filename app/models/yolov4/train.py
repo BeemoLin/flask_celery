@@ -49,7 +49,7 @@ def get_log_path(log_dir):
 def get_train_log_path(log_dir):
     return os.path.join(get_log_path(log_dir), "training.log")
 
-def training(log_dir, epochs = 1, lr = 1e-4):
+def training(log_dir=None, epochs = 1, lr = 1e-4):
     train_path, test_path = dataset()
 
     yolo = YOLOv4(tiny=True)
@@ -91,7 +91,7 @@ def training(log_dir, epochs = 1, lr = 1e-4):
         log_dir = create_log_dir()
 
     log_path = get_log_path(log_dir)
-    
+
     _callbacks = [
         callbacks.LearningRateScheduler(lr_scheduler),
         callbacks.TerminateOnNaN(),
@@ -112,7 +112,7 @@ def training(log_dir, epochs = 1, lr = 1e-4):
         validation_data=val_data_set,
         validation_steps=1,
         validation_freq=1,
-        steps_per_epoch=10,
+        steps_per_epoch=1,
     )
 
     del yolo
@@ -124,7 +124,7 @@ def training(log_dir, epochs = 1, lr = 1e-4):
 # def main(_argv):
 #     # x, y = dataset()
 #     training()
-
+#
 # if __name__ == '__main__':
 #     try:
 #         app.run(main)
